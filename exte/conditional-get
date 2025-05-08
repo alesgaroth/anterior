@@ -1,0 +1,8 @@
+We want exte to support conditional get
+either through Last-Modified header and If-Modified-Since:
+or through Etag: and If-Non-Match:
+
+For the full effect: we would have to say that if the template changed, it changed, so Last-Modified and Etag change
+if any of the data that is filled into the template changes, it changed.
+
+We may need to use a Weak Etag so we can include a datestamp of when the last time the page was rendered.

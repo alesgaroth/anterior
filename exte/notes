@@ -1,0 +1,19 @@
+ maps a URL to a template, and a toplevel sql query and a map of name -> sql query
+ 
+
+ blog.html:'blog.atml',
+ 					{ 'posts' -> 'select * From blog order by postdate desc',
+						'links' -> 'select * from links'
+					}
+ {id}/post.html -> 'post.atml',
+ 									{ 'post' -> 'select * From blog where id = :id',
+										'links' -> 'select * from links',
+										'comments' -> 'select * from comments where post_id = :id order by comment_date desc'
+								  }
+
+sql queries
+template to fill in
+
+
+how to avoid the n+1 problem?
+by the way we design our template?

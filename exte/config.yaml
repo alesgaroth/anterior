@@ -1,0 +1,134 @@
+---
+- path: "/"
+  template: root.html
+- path: "/blog/"
+  template: blog.html
+  queries:
+  - name: posts
+    sql: "
+      SELECT
+        posts.id,
+        posts.title,
+        substr(posts.body, 0, 500) AS body,
+        posts.postdate,
+        CONCAT('p', posts.id, '.html') AS link,
+        people.name,
+        CONCAT('../people/p', people.id,'.html') AS authorlink
+      FROM posts
+      NATURAL JOIN postauthors
+      NATURAL JOIN people
+      ORDER BY posts.id,
+      postauthors.percent,
+      people.name "
+    columns:
+    - title
+    - body
+    - postdate
+    - link
+    - id
+    joins:
+    - name: authors
+      columns:
+      - name
+      - authorlink
+    - name: comments
+      sql: "
+        SELECT
+          posts.id,
+          comments.text,
+          comments.commentdate,
+          people.name,
+          CONCAT('../people/p', people.id, '.html') AS commenterlink
+        FROM comments
+        NATURAL JOIN posts
+        NATURAL JOIN people
+        WHERE comments.postid = :postid
+        ORDER BY posts.id, commentdate "
+      columns:
+      - text
+      - commentdate
+      joins:
+      - name: posts
+        columns:
+        - id
+      - name: commenter
+        columns:
+        - name
+        - commenterlink
+  - name: menusections
+    sql: "
+      SELECT
+        link.url,
+        link.text,
+        menu.title
+      FROM links
+      NATURAL JOIN menus
+      ORDER BY menu.section, menu.menu_order, link.link_order "
+    joins:
+    - name: menus
+      columns:
+      - title
+    - name: links
+      columns:
+      - url
+      - text
+- path: "/blog/p{postid}.html"
+  template: post.html
+  queries:
+  - name: post
+    sql: "
+      SELECT
+        posts.title,
+        posts.body,
+        posts.postdate, CONCAT('p', posts.id,'.html') AS link,
+        people.name,
+        CONCAT('../people/p', people.id, '.html') AS authorlink
+      FROM posts
+      NATURAL JOIN postauthors
+      NATURAL JOIN people
+      WHERE posts.id = :postid
+      ORDER BY postauthors.percent, people.name "
+    columns:
+    - title
+    - body
+    - postdate
+    single: true
+    authors:
+    - name
+    - authorlink
+  - name: comments
+    sql: "
+      SELECT
+        comments.text,
+        comments.commentdate,
+        people.name,
+        CONCAT('../people/p', people.id, '.html') AS commenterlink
+      FROM comments
+      NATURAL JOIN people
+      WHERE comments.postid = :postid
+      ORDER BY commentdate "
+    columns:
+    - text
+    - commentdate
+    joins:
+    - name: commenter
+      columns:
+      - name
+      - commenterlink
+  - name: menusections
+    sql: "
+      SELECT
+        link.url,
+        link.text,
+        menu.title
+      FROM links
+      NATURAL JOIN menus
+      ORDER BY menu.section, menu.menu_order, link.link_order "
+    joins:
+    - name: menus
+      columns:
+      - title
+    - name: links
+      columns:
+      - url
+      - text
