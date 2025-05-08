@@ -1,0 +1,256 @@
+<html>
+	<head>
+		<title data-field="canvas_name">Business Model Canvas</title>
+		<style>
+			/* colouring */
+			#Canvas > li {
+				background: lightgray;
+				border: 2px solid white;
+				border-radius: 10px;
+			}
+			#Canvas > li legend {
+				padding: 2px 0px 0px 20px;
+			}
+			#markettype a {
+				color: black;
+				text-decoration: none;
+				padding-left: 20px
+			}
+			#Canvas li ul li[data-repeating] a {
+				color: gray;
+			}
+			#Canvas li ul li:not([data-repeating]) > a:before {
+				content: '+';
+				padding-right: 1em;
+			}
+			#Canvas li ul li a {
+				text-decoration: none;
+				color: black;
+			}
+			#Canvas li ul li[data-repeating] {
+				padding: 15px 15px 15px 15px;
+				background: white;
+			}
+			#Canvas li ul li {
+				border: 5px solid lightgray;
+				border-radius: 20px;
+
+				padding: 8px;
+				height: 50px;
+			}
+			#Canvas ul {
+				list-style-type: none;
+				padding: 0;
+				margin: 0;
+			}
+
+			/* location */
+			main, header, footer {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			#canvasheader {
+				display: grid;
+				gap: 10px;
+				grid-template-columns: 40% 20% 20% 20%
+			}
+			#canvasheader div {
+				background: lightgray;
+			}
+			#canvas_name, #by, #for  {
+				grid-row: 1 / span 2;
+			}
+			h2 {
+				text-align: center;
+				text-size: bigger;
+			}
+			#Canvas {
+				display: grid;
+				gap: 10px;
+				grid-template-columns: repeat(10, 120px);
+				list-style-type: none;
+				padding: 0;
+			}
+			#keypartners {
+				grid-column: 1 / span 2;
+				grid-row: 1 / span 2;
+			}
+			#keyactivities {
+				grid-column: 3 / span 2;
+				grid-row: 1;
+			}
+			#keyassets {
+				grid-column: 3 / span 2;
+				grid-row: 2;
+			}
+			#valueprops {
+				grid-column: 5 / span 2;
+				grid-row: 1 / span 2;
+			}
+			#channels {
+				grid-column: 7 / span 2;
+				grid-row: 2;
+			}
+			#relationships {
+				grid-column: 7 / span 2;
+				grid-row: 1;
+			}
+			#customersegments {
+				grid-column: 9 / span 2;
+				grid-row: 1 / span 2;
+			}
+			#coststructure {
+				grid-column: 1 / span 5;
+			}
+			#revenuestreams {
+				grid-column: 6 / span 5;
+			}
+			#markettype {
+				grid-column: 1 / span 5;
+			}
+			#competitors {
+				grid-column: 1 / span 5;
+				grid-row: 5
+			}
+			#marketsize {
+				grid-column: 6 / span 5;
+				grid-row: 4 / span 2;
+			}
+		</style>
+	</head>
+	<body>
+		<header>
+			<div>
+				<h1 data-field="canvas_name">Business Model Canvas</h1>
+				<nav>
+					<ul>
+						<li data-repeating="true"><a href="https://bmc.alesgaroth.com" data-attr-href="link" data-field="canvas_name">Busines Model Canvas</a></li>
+					</ul>
+				</nav>
+			</div>
+		</header>
+		<main>
+			<div>
+				<div id="canvasheader">
+					<h2 id="canvas_name">Business Model Canvas</h2>
+					<div id="by"><legend>By</legend><a href="#" data-item="who">Alan Linton</a></div>
+					<div id="for"><legend>For</legend><a href="#" data-item="for">SunFiver.com</a></div>
+					<div id="on"><legend>On</legend><a href="#" data-item="on">2025-May-01</a></div>
+					<div id="iteration"><legend>Iteration</legend><a href="#" data-item="iteration">1</a></div>
+				</div>
+				<ul id="Canvas">
+					<li id="keypartners">
+						<legend>Key Partners</legend>
+						<ul>
+							<li data-repeating="true"><a href="#b" data-field="text">Axium</a></li>
+							<li><a href="#">Add Partner</a></li>
+						</ul>
+					</li>
+					<li id="keyactivities">
+						<legend>Key Activites</legend>
+						<ul>
+							<li data-repeating="true"><a href="#b" data-field="text">Build Homes</a></li>
+							<li><a href="#">Add Activity</a></li>
+						</ul>
+					</li>
+					<li id="keyassets">
+						<legend>Key Assets</legend>
+						<ul>
+							<li data-repeating="true"><a href="#b" data-field="text">Asteroid Material</a></li>
+							<li><a href="#">Add Assets</a></li>
+						</ul>
+					</li>
+					<li id="valueprops">
+						<legend>Value Propositions</legend>
+						<ul>
+							<li data-repeating="true"><a href="#b" data-field="text">Homes in *Space*</a></li>
+							<li><a href="#">Add Value</a></li>
+						</ul>
+					</li>
+					<li id="relationships">
+						<legend>Relationships</legend>
+						<ul>
+							<li data-repeating="true"><a href="#b" data-field="text">Email</a></li>
+							<li data-repeating="true"><a href="#b" data-field="text">Website</a></li>
+							<li data-repeating="true"><a href="#b" data-field="text">Realtor</a></li>
+							<li><a href="#">Add Relationship</a></li>
+						</ul>
+					</li>
+					<li id="channels">
+						<legend>Channels</legend>
+						<ul>
+							<li data-repeating="true"><a href="#b" data-field="text">Web</a></li>
+							<li data-repeating="true"><a href="#b" data-field="text">Conferences</a></li>
+							<li data-repeating="true"><a href="#b" data-field="text">Email Lists</a></li>
+							<li><a href="#">Add Channel</a></li>
+						</ul>
+					</li>
+					<li id="customersegments">
+						<legend>Customer Segments</legend>
+						<ul>
+							<li data-repeating="true"><a href="#b" data-field="text">Homeowners</a></li>
+							<li data-repeating="true"><a href="#b" data-field="text">Farmers</a></li>
+							<li data-repeating="true"><a href="#b" data-field="text">Shopkeepers</a></li>
+							<li data-repeating="true"><a href="#b" data-field="text">Factory Owners</a></li>
+							<li data-repeating="true"><a href="#b" data-field="text">Scientists</a></li>
+							<li><a href="#">Add Segment</a></li>
+						</ul>
+					</li>
+					<li id="coststructure">
+						<legend>Cost Structure</legend>
+						<ul>
+							<li data-repeating="true"><a href="#b" data-field="text">Collect Asteriod Material</a></li>
+							<li data-repeating="true"><a href="#b" data-field="text">Turn material into homes, farms, parks, shops</a></li>
+							<li><a href="#">Add Cost</a></li>
+						</ul>
+					</li>
+					<li id="revenuestreams">
+						<legend>Revenue Streams</legend>
+						<ul>
+							<li data-repeating="true"><a href="#b" data-field="text">People Buy homes</a></li>
+							<li data-repeating="true"><a href="#b" data-field="text">People Rent homes</a></li>
+							<li data-repeating="true"><a href="#b" data-field="text">Shopkeepers rent shop space</a></li>
+							<li data-repeating="true"><a href="#b" data-field="text">Farmers buy land to farm on</a></li>
+							<li data-repeating="true"><a href="#b" data-field="text">Factory Owners buy factories in zero g</a></li>
+							<li data-repeating="true"><a href="#b" data-field="text">Factory Owners buy factories in full g (with access to hard vacuum)</a></li>
+							<li><a href="#">Add Stream</a></li>
+						</ul>
+					</li>
+					<li id="markettype">
+						<legend>Market Type</legend>
+						<a href="#b" data-field="marketType">New Market</a>
+					</li>
+					<li id="competitors">
+						<legend>Competitors</legend>
+						<ul>
+							<li data-repeating="true"><a href="#b" data-field="text">None so far?</a></li>
+							<li data-repeating="true"><a href="#b" data-field="text">Planning to create them</a></li>
+							<li><a href="#">Add Competitor</a></li>
+						</ul>
+					</li>
+					<li id="marketsize">
+						<legend>Market Size</legend>
+						<ul>
+							<li>
+								<label>Total Addressable Market
+									<a href="#b" data-field="TAM">100 million people</a></label>
+							</li>
+							<li>
+								<label>Servable Addressable Market
+									<a href="#b"  data-field="SAM">10 million people</a></label>
+							</li>
+							<li>
+								<label>Value of the Servable Addressable Market
+									<a href="#b" data-field="marketsize">1 trillion</a></label>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</main>
+		<footer>
+			<p>Design Copyright Alan Linton</p>
+		</foote>
+	</body>
+</html>
