@@ -183,7 +183,7 @@ func recurseIt(hasAttrs bool, startTagName string, isSelfClosing bool, templates
 		allAttrs[key] = val
 	}
 
-  slash := "/"
+	slash := "/"
 	if !isSelfClosing || newdataItem != "" || newdataField != "" {
 		slash = ""
 	}
@@ -208,7 +208,6 @@ func attr(key, val string) string {
 	return key + "='" + val + "'"
 }
 
-
 /* run time below */
 
 func (at *anteTemplate) FillIn(w io.Writer, ds DataSource) error {
@@ -220,12 +219,15 @@ func (at *anteTemplate) FillIn(w io.Writer, ds DataSource) error {
 		}
 	}
 	if len(errs) > 0 {
-		fmt.Errorf("errors while filling in %v", errs)
+		return fmt.Errorf("errors while filling in %v", errs)
 	}
 	return nil
 }
 
 func (at *dsTemplate) fillInLoop(w io.Writer, ds DataSource) []error {
+	if ds == nil {
+		return []error{fmt.Errorf(" no loop for '%v'", at.item) }
+	}
 	var errs []error
 	for innerDs := ds.GetNext(); innerDs != nil; innerDs = ds.GetNext() {
 		errs = at.fillInOnce(w, ds, innerDs, errs)
@@ -255,7 +257,7 @@ func (at *dsTemplate) fillIn(w io.Writer, ds DataSource) []error {
 func (at *dsTemplate) FillIn(w io.Writer, ds DataSource) error {
 	errs := at.fillIn(w, ds)
 	if len(errs) > 0 {
-		fmt.Errorf("errors while filling in %v", errs)
+		return fmt.Errorf("'%s' %v", at.item, errs)
 	}
 	return nil
 }

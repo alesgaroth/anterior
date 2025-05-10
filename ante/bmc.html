@@ -124,7 +124,7 @@
 			<div>
 				<h1 data-field="canvas_name">Business Model Canvas</h1>
 				<nav>
-					<ul>
+					<ul data-item="navigation">
 						<li data-repeating="true"><a href="https://bmc.alesgaroth.com" data-attr-href="link" data-field="canvas_name">Busines Model Canvas</a></li>
 					</ul>
 				</nav>
@@ -134,43 +134,43 @@
 			<div>
 				<div id="canvasheader">
 					<h2 id="canvas_name">Business Model Canvas</h2>
-					<div id="by"><legend>By</legend><a href="#" data-item="who">Alan Linton</a></div>
-					<div id="for"><legend>For</legend><a href="#" data-item="for">SunFiver.com</a></div>
-					<div id="on"><legend>On</legend><a href="#" data-item="on">2025-May-01</a></div>
-					<div id="iteration"><legend>Iteration</legend><a href="#" data-item="iteration">1</a></div>
+					<div id="by"><legend>By</legend><a href="#" data-field="who">Alan Linton</a></div>
+					<div id="for"><legend>For</legend><a href="#" data-field="for">SunFiver.com</a></div>
+					<div id="on"><legend>On</legend><a href="#" data-field="on">2025-May-01</a></div>
+					<div id="iteration"><legend>Iteration</legend><a href="#" data-field="iteration">1</a></div>
 				</div>
 				<ul id="Canvas">
 					<li id="keypartners">
 						<legend>Key Partners</legend>
-						<ul>
+						<ul data-item="keypartners">
 							<li data-repeating="true"><a href="#b" data-field="text">Axium</a></li>
 							<li><a href="#">Add Partner</a></li>
 						</ul>
 					</li>
 					<li id="keyactivities">
 						<legend>Key Activites</legend>
-						<ul>
+						<ul data-item="keypartners">
 							<li data-repeating="true"><a href="#b" data-field="text">Build Homes</a></li>
 							<li><a href="#">Add Activity</a></li>
 						</ul>
 					</li>
 					<li id="keyassets">
 						<legend>Key Assets</legend>
-						<ul>
+						<ul data-item="keyassets">
 							<li data-repeating="true"><a href="#b" data-field="text">Asteroid Material</a></li>
 							<li><a href="#">Add Assets</a></li>
 						</ul>
 					</li>
 					<li id="valueprops">
 						<legend>Value Propositions</legend>
-						<ul>
+						<ul data-item="valueprops">
 							<li data-repeating="true"><a href="#b" data-field="text">Homes in *Space*</a></li>
 							<li><a href="#">Add Value</a></li>
 						</ul>
 					</li>
 					<li id="relationships">
 						<legend>Relationships</legend>
-						<ul>
+						<ul data-item="relationships">
 							<li data-repeating="true"><a href="#b" data-field="text">Email</a></li>
 							<li data-repeating="true"><a href="#b" data-field="text">Website</a></li>
 							<li data-repeating="true"><a href="#b" data-field="text">Realtor</a></li>
@@ -179,7 +179,7 @@
 					</li>
 					<li id="channels">
 						<legend>Channels</legend>
-						<ul>
+						<ul data-item="channels">
 							<li data-repeating="true"><a href="#b" data-field="text">Web</a></li>
 							<li data-repeating="true"><a href="#b" data-field="text">Conferences</a></li>
 							<li data-repeating="true"><a href="#b" data-field="text">Email Lists</a></li>
@@ -188,7 +188,7 @@
 					</li>
 					<li id="customersegments">
 						<legend>Customer Segments</legend>
-						<ul>
+						<ul data-item="cuustomersegments">
 							<li data-repeating="true"><a href="#b" data-field="text">Homeowners</a></li>
 							<li data-repeating="true"><a href="#b" data-field="text">Farmers</a></li>
 							<li data-repeating="true"><a href="#b" data-field="text">Shopkeepers</a></li>
@@ -199,7 +199,7 @@
 					</li>
 					<li id="coststructure">
 						<legend>Cost Structure</legend>
-						<ul>
+						<ul data-item="coststructure">
 							<li data-repeating="true"><a href="#b" data-field="text">Collect Asteriod Material</a></li>
 							<li data-repeating="true"><a href="#b" data-field="text">Turn material into homes, farms, parks, shops</a></li>
 							<li><a href="#">Add Cost</a></li>
@@ -207,7 +207,7 @@
 					</li>
 					<li id="revenuestreams">
 						<legend>Revenue Streams</legend>
-						<ul>
+						<ul data-item="revenuestreams">
 							<li data-repeating="true"><a href="#b" data-field="text">People Buy homes</a></li>
 							<li data-repeating="true"><a href="#b" data-field="text">People Rent homes</a></li>
 							<li data-repeating="true"><a href="#b" data-field="text">Shopkeepers rent shop space</a></li>
@@ -217,13 +217,13 @@
 							<li><a href="#">Add Stream</a></li>
 						</ul>
 					</li>
-					<li id="markettype">
+					<li id="markettype" data-item="markettype">
 						<legend>Market Type</legend>
 						<a href="#b" data-field="marketType">New Market</a>
 					</li>
 					<li id="competitors">
 						<legend>Competitors</legend>
-						<ul>
+						<ul data-item="competitors">
 							<li data-repeating="true"><a href="#b" data-field="text">None so far?</a></li>
 							<li data-repeating="true"><a href="#b" data-field="text">Planning to create them</a></li>
 							<li><a href="#">Add Competitor</a></li>
@@ -231,7 +231,7 @@
 					</li>
 					<li id="marketsize">
 						<legend>Market Size</legend>
-						<ul>
+						<ul data-item="marketsize">
 							<li>
 								<label>Total Addressable Market
 									<a href="#b" data-field="TAM">100 million people</a></label>

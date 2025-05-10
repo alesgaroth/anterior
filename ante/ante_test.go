@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"slices"
 	"strconv"
+	"strings"
 	"testing"
 )
 import _ "embed"
@@ -58,11 +59,27 @@ func TestEmptyField(t *testing.T) {
 	testIt(t, ds, template, expected)
 }
 
+func TestMissingList(t *testing.T) {
+	template := "<p data-item='list'><span data-repeating='true'><span data-field='goo'>Goo</span></span></p>"
+	expected := "<p data-item='list'></p>"
+	err := testIt(t, ds, template, expected)
+	if err == nil {
+		t.Errorf("expected an error in missing  list and got nothing")
+	}
+	if !strings.Contains(err.Error(), "no loop") {
+		t.Errorf("expected an error containing 'no loop' got %v ", err)
+	}
+	if !strings.Contains(err.Error(), "list") {
+		t.Errorf("expected an error containing 'list' got %v", err)
+	}
+}
+
 func TestItem(t *testing.T) {
 	myds := &MapDataSourceDataSource{
 		map[string]ante.DataSource{
 			"item": ds,
 		},
+		map[string]string{},
 	}
 	template := "\n<div data-item='item'><p data-field='foo'>Bar</p></div>"
 	expected := "\n<div data-item='item'><p data-field='foo'>Baz</p></div>"
@@ -105,21 +122,23 @@ func TestAttr(t *testing.T) {
 	testIt2(t, ds, template, []string{expected, expected2})
 }
 
-func testIt(t *testing.T, ds ante.DataSource, template string, expected string) {
-	testIt2(t, ds, template, []string{expected})
+func testIt(t *testing.T, ds ante.DataSource, template string, expected string) error {
+	return testIt2(t, ds, template, []string{expected})
 }
-func testIt2(t *testing.T, ds ante.DataSource, template string, expected []string) {
+func testIt2(t *testing.T, ds ante.DataSource, template string, expected []string) error {
 
 	tmplt := ante.NewAnteTemplate(template)
 	output := &bytes.Buffer{}
-	tmplt.FillIn(output, ds)
+	err := tmplt.FillIn(output, ds)
 
 	if !slices.Contains(expected, output.String()) {
 		t.Errorf("template output does not match : got %v expected %v", output, expected)
-		return
+		return err
 	}
+	return err
 }
 
+/*
 //go:embed bmc.html
 var templateString string
 
@@ -129,6 +148,7 @@ func TestBig(t *testing.T) {
 	tmplt.FillIn(output, ds)
 	//t.Errorf("Got : %v", output)
 }
+*/
 
 type MapDataSource struct {
 	mp map[string]string
@@ -146,10 +166,11 @@ func (*MapDataSource) GetNext() ante.DataSource {
 
 type MapDataSourceDataSource struct {
 	mp map[string]ante.DataSource
+	md map[string]string
 }
 
 func (mds *MapDataSourceDataSource) Get(key string) string {
-	return ""
+	return mds.md[key]
 }
 func (mds *MapDataSourceDataSource) GetDS(key string) ante.DataSource {
 	return mds.mp[key]
