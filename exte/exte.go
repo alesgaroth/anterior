@@ -2,19 +2,18 @@ package exte
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"regexp"
-	//"strconv"
 
 	"alesgaroth.com/anterior/ante"
-	"alesgaroth.com/anterior/rior"
 	uritemplate "github.com/yosida95/uritemplate/v3"
 	yaml "gopkg.in/yaml.v3"
 	"net/http"
 )
 
 type Queryr interface {
-	DoQuery() rior.DataSource
+	DoQuery() ante.DataSource
 }
 
 type Extedata struct {
@@ -36,14 +35,18 @@ type Joined struct {
 }
 
 type ExteQueryr struct {
-	Db      rior.DB
+	Db      DB
 	Queries []Query
 }
 
+type DB interface {
+	Query(string) ante.DataSource
+}
+
 type qd struct {
-	ds rior.DataSource
-	q Query
-	ds_cache rior.DataSource
+	ds       ante.DataSource
+	q        Query
+	ds_cache ante.DataSource
 }
 
 type exteDataSource struct {
@@ -53,43 +56,53 @@ type exteDataSource struct {
 func (eds *exteDataSource) Get(key string) string {
 	return ""
 }
-func (eds *exteDataSource) GetDS(key string) rior.DataSource {
-  q := eds.datasources[key]
+func (eds *exteDataSource) GetDS(key string) ante.DataSource {
+	q := eds.datasources[key]
 	if q.ds_cache == nil {
-		q.ds_cache = &riorAdapter{q.q, q.q.Columns, q.ds, make(map[string]rior.DataSource)}
+		q.ds_cache = &riorAdapter{q.q, q.q.Columns, q.ds, make(map[string]ante.DataSource)}
 	}
 	return q.ds_cache
 }
 
+func (q *exteDataSource) GetNext() ante.DataSource {
+	return nil
+}
+
 type riorAdapter struct {
-	q Query
-	cols []string
-	ds rior.DataSource
-	ds_cache map[string]rior.DataSource
+	q        Query
+	cols     []string
+	ds       ante.DataSource
+	ds_cache map[string]ante.DataSource
 }
 
 func (q *riorAdapter) Get(key string) string {
 	for _, col := range q.cols {
-	  if col == key {
+		if col == key {
 			return q.ds.Get(key)
 		}
 	}
 	return ""
 }
-func (q riorAdapter) GetDS(key string) rior.DataSource {
+func (q riorAdapter) GetDS(key string) ante.DataSource {
 	return emptyDS(false)
+}
+func (q riorAdapter) GetNext() ante.DataSource {
+	return nil
 }
 
 type emptyDS bool
-func (emptyDS) GetDS(key string) rior.DataSource {
+
+func (emptyDS) GetDS(key string) ante.DataSource {
 	return emptyDS(false)
 }
 func (emptyDS) Get(key string) string {
 	return ""
 }
+func (q emptyDS) GetNext() ante.DataSource {
+	return nil
+}
 
-
-func (cq *ExteQueryr) DoQuery() rior.DataSource {
+func (cq *ExteQueryr) DoQuery() ante.DataSource {
 	eds := &exteDataSource{make(map[string]qd)}
 	for _, query := range cq.Queries {
 		if cq.Db == nil {
@@ -106,15 +119,18 @@ type HandlerEntry struct {
 }
 
 type handlerCollector struct {
-	errs     []error
-	db       rior.DB
-	ante     ante.Ante
-	handlers *[]HandlerEntry
-	plugins []Plugin
+	errs       []error
+	db         DB
+	tmplengine TemplateEngine
+	handlers   *[]HandlerEntry
+	plugins    []Plugin
 }
 
 type Plugin interface {
-	GetHandlers(ed Extedata, ante ante.Ante, db rior.DB) []HandlerEntry
+	GetHandlers(ed Extedata, tmplengine TemplateEngine, db DB) []HandlerEntry
+}
+type TemplateEngine interface {
+	ParseTemplate(f io.Reader) (ante.AnteTemplate, error)
 }
 
 func (e *handlerCollector) collectHandlers(ed Extedata) {
@@ -124,7 +140,7 @@ func (e *handlerCollector) collectHandlers(ed Extedata) {
 		return
 	}
 	defer f.Close()
-	tmplt, err := e.ante.ParseTemplate(f)
+	tmplt, err := e.tmplengine.ParseTemplate(f)
 	if err != nil {
 		e.errs = append(e.errs, err)
 		return
@@ -149,17 +165,17 @@ func (e *handlerCollector) collectHandlers(ed Extedata) {
 
 func (ed Extedata) plugins(e *handlerCollector) {
 	for _, plugin := range e.plugins {
-		*e.handlers = append(*e.handlers, plugin.GetHandlers(ed, e.ante, e.db)...)
+		*e.handlers = append(*e.handlers, plugin.GetHandlers(ed, e.tmplengine, e.db)...)
 	}
 }
 
-func CreateHandlers(filename string, db rior.DB, ante ante.Ante, plugins []Plugin) (http.HandlerFunc, error) {
+func CreateHandlers(filename string, db DB, tmplengine TemplateEngine, plugins []Plugin) (http.HandlerFunc, error) {
 	extedata, err := ParseYaml(filename)
 	if err != nil {
 		return nil, err
 	}
 	entries := []HandlerEntry{}
-	handlerrs := &handlerCollector{[]error{}, db, ante, &entries, plugins}
+	handlerrs := &handlerCollector{[]error{}, db, tmplengine, &entries, plugins}
 	for _, ed := range extedata {
 		handlerrs.collectHandlers(ed)
 	}
@@ -183,9 +199,9 @@ func CreateHandlers(filename string, db rior.DB, ante ante.Ante, plugins []Plugi
 	return handler, nil
 }
 
-func CreateHandler(template ante.Template, q Queryr) http.HandlerFunc {
+func CreateHandler(template ante.AnteTemplate, q Queryr) http.HandlerFunc {
 	return func(rw http.ResponseWriter, req *http.Request) {
-		template.Execute(q.DoQuery(), rw)
+		template.FillIn(rw, q.DoQuery())
 	}
 }
 

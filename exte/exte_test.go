@@ -11,7 +11,6 @@ import (
 
 	"alesgaroth.com/anterior/ante"
 	"alesgaroth.com/anterior/exte"
-	"alesgaroth.com/anterior/rior"
 )
 
 type TestResponseWriter struct {
@@ -124,7 +123,7 @@ func TestRouting(t *testing.T) {
 		},
 		testdata{
 			path: "/blog/p7.html",
-      expected: `<html>
+			expected: `<html>
 <head>
 <title>My blog post</title>
 </head>
@@ -146,18 +145,18 @@ func TestRouting(t *testing.T) {
 func TestSingles(t *testing.T) {
 
 	// test that queries returning a single row return the expected
-  queries := []exte.Query {
-		exte.Query {
-			Name: "foo",
-			SQL: "Query1",
+	queries := []exte.Query{
+		exte.Query{
+			Name:    "foo",
+			SQL:     "Query1",
 			Columns: []string{"bar"},
-			Single: true,
+			Single:  true,
 			Joins:   []exte.Joined{},
 		},
 	}
-	back := &ArrRior{map[string]string{"bar":"baz"}}
+	back := &ArrRior{map[string]string{"bar": "baz"}}
 	eq := exte.ExteQueryr{
-		Db: back,
+		Db:      back,
 		Queries: queries,
 	}
 
@@ -171,21 +170,21 @@ func TestSingles(t *testing.T) {
 func TestMultipleRows(t *testing.T) {
 	// test that queries returning multiple rows return the expected
 	// I'm not testing what I think I'm testing
-  queries := []exte.Query {
-		exte.Query {
-			Name: "foo",
-			SQL: "Query1",
+	queries := []exte.Query{
+		exte.Query{
+			Name:    "foo",
+			SQL:     "Query1",
 			Columns: []string{"bar"},
-			Single: false,
-			Joins:  []exte.Joined{},
+			Single:  false,
+			Joins:   []exte.Joined{},
 		},
 	}
-	back := &ArrArrRior{map[string]*ArrRior {
-		"1": &ArrRior{map[string]string{"bar":"baz"}},
-		"2": &ArrRior{map[string]string{"bar":"bat"}},
-		}}
+	back := &ArrArrRior{map[string]*ArrRior{
+		"1": &ArrRior{map[string]string{"bar": "baz"}},
+		"2": &ArrRior{map[string]string{"bar": "bat"}},
+	}}
 	eq := exte.ExteQueryr{
-		Db: back,
+		Db:      back,
 		Queries: queries,
 	}
 
@@ -203,18 +202,18 @@ func TestMultipleRows(t *testing.T) {
 
 func TestColumns(t *testing.T) {
 	// test that you can only see the columns for the table, not its joins
-  queries := []exte.Query {
-		exte.Query {
-			Name: "foo",
-			SQL: "Query1",
+	queries := []exte.Query{
+		exte.Query{
+			Name:    "foo",
+			SQL:     "Query1",
 			Columns: []string{"bar"},
-			Single: false,
-			Joins:  []exte.Joined{},
+			Single:  false,
+			Joins:   []exte.Joined{},
 		},
-	} 
-	back := &ArrRior{map[string]string{"bar":"baz", "splat": "sploit"}}
+	}
+	back := &ArrRior{map[string]string{"bar": "baz", "splat": "sploit"}}
 	eq := exte.ExteQueryr{
-		Db: back,
+		Db:      back,
 		Queries: queries,
 	}
 
@@ -227,23 +226,23 @@ func TestColumns(t *testing.T) {
 
 func TestJoins(t *testing.T) {
 	// test that you can navigate into the joins ...
-  queries := []exte.Query {
-		exte.Query {
-			Name: "foo",
-			SQL: "Query1",
+	queries := []exte.Query{
+		exte.Query{
+			Name:    "foo",
+			SQL:     "Query1",
 			Columns: []string{"bar"},
-			Single: false,
-			Joins:  []exte.Joined{
+			Single:  false,
+			Joins: []exte.Joined{
 				exte.Joined{
-					Name: "join1",
+					Name:    "join1",
 					Columns: []string{"jcol1", "jcol2"},
 				},
 			},
 		},
-	} 
-	back := &ArrRior{map[string]string{"bar":"baz", "jcol1": "sploit", "jcol2": "splat"}}
+	}
+	back := &ArrRior{map[string]string{"bar": "baz", "jcol1": "sploit", "jcol2": "splat"}}
 	eq := exte.ExteQueryr{
-		Db: back,
+		Db:      back,
 		Queries: queries,
 	}
 	ds := eq.DoQuery()
@@ -277,7 +276,7 @@ func TestParsing(t *testing.T) {
 	}
 }
 
-func testIt(t *testing.T, template ante.Template, request *http.Request, rior exte.Queryr, expected string) {
+func testIt(t *testing.T, template ante.AnteTemplate, request *http.Request, rior exte.Queryr, expected string) {
 	handler := exte.CreateHandler(template, rior)
 	tester(t, handler, request, expected)
 }
@@ -296,11 +295,11 @@ func tester(t *testing.T, handler http.HandlerFunc, request *http.Request, expec
 
 type SimpleRior int
 
-func (s SimpleRior) DoQuery() rior.DataSource {
+func (s SimpleRior) DoQuery() ante.DataSource {
 	return SimpleDS(s)
 }
 
-func (s SimpleRior) Query(sql string) rior.DataSource {
+func (s SimpleRior) Query(sql string) ante.DataSource {
 	return SimpleDS(s)
 }
 
@@ -309,7 +308,10 @@ type SimpleDS int
 func (s SimpleDS) Get(name string) string {
 	return fmt.Sprintf("%d", s)
 }
-func (SimpleDS) GetDS(name string) rior.DataSource {
+func (SimpleDS) GetDS(name string) ante.DataSource {
+	return nil
+}
+func (SimpleDS) GetNext() ante.DataSource {
 	return nil
 }
 
@@ -318,13 +320,13 @@ type SimpleTemplate struct {
 	bytes []byte
 }
 
-func (s SimpleAnte) ParseTemplate(r io.Reader) (ante.Template, error) {
+func (s SimpleAnte) ParseTemplate(r io.Reader) (ante.AnteTemplate, error) {
 	st := SimpleTemplate{make([]byte, 100)}
 	len, _ := r.Read(st.bytes)
 	return &SimpleTemplate{st.bytes[:len]}, nil
 }
 
-func (s *SimpleTemplate) Execute(ds rior.DataSource, w io.Writer) error {
+func (s *SimpleTemplate) FillIn(w io.Writer, ds ante.DataSource) error {
 	if _, err := w.Write(s.bytes); err != nil {
 		return err
 	}
@@ -339,13 +341,13 @@ type StaticTemplate struct {
 	bytes []byte
 }
 
-func (s StaticAnte) ParseTemplate(r io.Reader) (ante.Template, error) {
+func (s StaticAnte) ParseTemplate(r io.Reader) (ante.AnteTemplate, error) {
 	st := make([]byte, 100)
 	len, _ := r.Read(st)
 	return &StaticTemplate{st[:len]}, nil
 }
 
-func (s *StaticTemplate) Execute(ds rior.DataSource, w io.Writer) error {
+func (s *StaticTemplate) FillIn(w io.Writer, ds ante.DataSource) error {
 	_, err := w.Write(s.bytes)
 	return err
 }
@@ -358,11 +360,11 @@ type MyTemplate struct {
 	ante MyAnte
 }
 
-func (m MyAnte) ParseTemplate(r io.Reader) (ante.Template, error) {
+func (m MyAnte) ParseTemplate(r io.Reader) (ante.AnteTemplate, error) {
 	return &MyTemplate{m}, nil
 }
 
-func (s *MyTemplate) Execute(ds rior.DataSource, w io.Writer) error {
+func (s *MyTemplate) FillIn(w io.Writer, ds ante.DataSource) error {
 	s.ante.reponses = make([]string, len(s.ante.colsToGet))
 	for i, col := range s.ante.colsToGet {
 		s.ante.reponses[i] = ds.Get(col)
@@ -374,14 +376,17 @@ type ArrRior struct {
 	m map[string]string
 }
 
-func (ar *ArrRior)Query(name string) rior.DataSource {
+func (ar *ArrRior) Query(name string) ante.DataSource {
 	return ar
 }
 
 func (ar *ArrRior) Get(name string) string {
 	return ar.m[name]
 }
-func (ar *ArrRior) GetDS(name string) rior.DataSource {
+func (ar *ArrRior) GetDS(name string) ante.DataSource {
+	return nil
+}
+func (ar *ArrRior) GetNext() ante.DataSource {
 	return nil
 }
 
@@ -389,13 +394,16 @@ type ArrArrRior struct {
 	arr map[string]*ArrRior
 }
 
-func (arr *ArrArrRior)Query(name string) rior.DataSource {
+func (arr *ArrArrRior) Query(name string) ante.DataSource {
 	return arr
 }
 
 func (ar *ArrArrRior) Get(name string) string {
 	return ""
 }
-func (ar *ArrArrRior) GetDS(name string) rior.DataSource {
+func (ar *ArrArrRior) GetDS(name string) ante.DataSource {
 	return ar.arr[name]
+}
+func (ar *ArrArrRior) GetNext() ante.DataSource {
+	return nil
 }

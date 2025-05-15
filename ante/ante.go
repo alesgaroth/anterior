@@ -226,7 +226,7 @@ func (at *anteTemplate) FillIn(w io.Writer, ds DataSource) error {
 
 func (at *dsTemplate) fillInLoop(w io.Writer, ds DataSource) []error {
 	if ds == nil {
-		return []error{fmt.Errorf(" no loop for '%v'", at.item) }
+		return []error{fmt.Errorf(" no loop for '%v'", at.item)}
 	}
 	var errs []error
 	for innerDs := ds.GetNext(); innerDs != nil; innerDs = ds.GetNext() {
